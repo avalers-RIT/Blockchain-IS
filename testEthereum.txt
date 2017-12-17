@@ -1,0 +1,42 @@
+first steps
+install npm
+install node
+npm install ethereumjs-testrpc web3 run npm install ethereumjs-testrpc web3@0.20.1
+ cd ..
+Valentinas-MacBook-Air:~ valentinarodriguez$ node_modules/.bin/testrpc
+--------execute node and loading variables ---------
+node
+Web3 = require('web3')
+web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+web3.eth.accounts
+------- to deploy the program in the ethereum- be in the source folder---------------
+codeB = fs.readFileSync('AuthorizationB.sol').toString()
+solc = require('solc')
+compiledCodeB = solc.compile(codeB)
+abiDefinition = JSON.parse(compiledCodeB.contracts[':AuthorizationB'].interface)
+AuthorizationBContract = web3.eth.contract(abiDefinition)
+byteCode = compiledCodeB.contracts[':AuthorizationB'].bytecode
+deployedContract = AuthorizationBContract.new({data: byteCode, from: web3.eth.accounts[0], gas: 4700000})
+deployedContract.address
+contractInstance = AuthorizationBContract.at(deployedContract.address)
+
+------- to test the program---------------
+contractInstance.getPermissions({from: web3.eth.accounts[0]})
+'0xdb990ff5989a85cfbb6faf0720453dc23a0ce4c61530c56125d27bf4fedaa97a'
+it's returning the transaction
+
+-----------to get the permission associated with the particular role-------------
+contractInstance.getPermissionsByRole.call('ROLE1')
+BigNumber { s: 1, e: 0, c: [ 1 ] }
+
+or
+
+contractInstance.getPermissionsByRole.call('ROLE1').toLocaleString()
+'1'
+
+
+-----------to get the permission associated with the particular address-------------
+ contractInstance.getPermissions.call()
+BigNumber { s: 1, e: 0, c: [ 1 ] }
+> contractInstance.getPermissions.call().toLocaleString()
+'1'
